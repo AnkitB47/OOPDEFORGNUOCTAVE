@@ -1,0 +1,235 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Elliptic</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-10-19"><meta name="DC.source" content="Elliptic.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Elliptic</a></li><li><a href="#3">Inheritance</a></li><li><a href="#4">Protected Methods</a></li><li><a href="#6">Public method</a></li></ul></div><h2 id="1">Elliptic</h2><p>This class implements a linear elliptic PDE of the form</p><p>Au = f</p><p>plus Dirichlet and/or Robin boundary conditions.</p><pre class="codeinput"><span class="keyword">classdef</span> Elliptic &lt; pde
+</pre><p>This class implements a linear elliptic PDE</p><p><img src="Elliptic_eq17221882110266374441.png" alt="$$-\nabla\cdot(c(x)\nabla u) + a(x) u = f$$"></p><p>plus Dirichlet and/or Robin boundary conditions.</p><h2 id="3">Inheritance</h2><p>elliptic &lt; pde</p><h2 id="4">Protected Methods</h2><p>We implement df and overwrite jacobian.</p><div><ul><li>df IN:self,double,double OUT:double</li><li>jacobian IN:self,double,double OUT:double</li></ul></div><p>The problem is (affine) linear and hence we can write it in the form</p><p><img src="Elliptic_eq13123411079506439347.png" alt="$$0 = A*y + b$$"></p><h2 id="6">Public method</h2><p>We overwrite initialize and solve</p><p>In initialize we call pde.initialize method that computed obj.K, obj.M, etc., but not obj.A. The definition of b as a dimension depending zeros vector is necessary to fit pde.initialize's interface.</p><p>In solve we overwrite pde.solve to force the use of the LINEARGAUSS solver.</p><p>Overload plot method a plot method.</p><p>Depending from space dimension, it uses line, surface or colorplot.</p><pre class="codeinput">    methods(Access = protected)
+        <span class="keyword">function</span>  dy = df(obj,~,y)
+            dy = obj.A*y + obj.b;
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> J = jacobian(obj,~,~)
+            J = obj.A;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    methods(Access = public)
+        <span class="keyword">function</span> initialize(obj,c,a,f)
+            b = zeros(obj.grid.spaceDimension,1);
+            initialize@pde(obj,c,b,a,f);
+            s = obj.fem.stiffSpring(obj.K+obj.M);
+            obj.A = -(obj.K+obj.M+obj.Q+s*(obj.H'*obj.H));
+            obj.b = obj.F+obj.G+s*(obj.H'*obj.R);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> solve(obj,solver)
+            <span class="keyword">switch</span> nargin
+                <span class="keyword">case</span> 1
+                    solve@pde(obj,<span class="string">'LINEARGAUSS'</span>);
+                <span class="keyword">case</span> 2
+                    <span class="keyword">if</span> ~ischar(solver)
+                        MException(<span class="string">'ELLIPTIC:WRONGARGUMENTCLASS'</span>,<span class="keyword">...</span>
+                                <span class="string">'The argument must be of class char'</span>).throwAsCaller;
+                    <span class="keyword">end</span>
+                    <span class="keyword">switch</span> solver
+                        <span class="keyword">case</span> {<span class="string">'LINEAR'</span> <span class="string">'LINEARGAUSS'</span> <span class="string">'AMG'</span>}
+                            fprintf([<span class="string">'User defined solver: '</span>, solver,<span class="string">'\n'</span>]);
+                            solve@pde(obj,solver);
+                        <span class="keyword">otherwise</span>
+                            MException(<span class="string">'ELLIPTIC:NOTSUPPORTED'</span>,<span class="keyword">...</span>
+                                [<span class="string">'The solver '</span>,solver,<span class="string">' is not supported'</span>]).throwAsCaller;
+                    <span class="keyword">end</span>
+                <span class="keyword">otherwise</span>
+                    <span class="comment">% The to many arguments exception will be thrown</span>
+                    <span class="comment">% automatically.</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> plot(obj,varargin)
+            <span class="keyword">switch</span> obj.grid.spaceDimension
+                <span class="keyword">case</span> {1 , 2}
+                    obj.grid.plot(obj.y,varargin{:});
+                <span class="keyword">case</span> 3
+                    obj.grid.plotFaces(obj.y,varargin{:});
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><pre class="codeoutput">
+ans = 
+
+  Elliptic with properties:
+
+              fem: []
+             grid: []
+       odeOptions: [1&times;1 struct]
+    solverOptions: [1&times;1 struct]
+             time: []
+                y: []
+                A: []
+                b: []
+                D: []
+       nTimeSteps: 0
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Elliptic
+% This class implements a linear elliptic PDE of the form
+%
+% Au = f 
+% 
+% plus Dirichlet and/or Robin boundary conditions.
+%
+ 
+
+classdef Elliptic < pde
+    %% 
+    % This class implements a linear elliptic PDE
+    %
+    % 
+    % $$-\nabla\cdot(c(x)\nabla u) + a(x) u = f$$
+    % 
+    % plus Dirichlet and/or Robin boundary conditions.
+    %
+    %% Inheritance
+    % elliptic < pde
+    %
+    %% Protected Methods
+    % We implement df and overwrite jacobian. 
+    % 
+    % * df IN:self,double,double OUT:double
+    % * jacobian IN:self,double,double OUT:double
+    %
+    %%
+    % The problem is (affine) linear and hence we can write it in the
+    % form
+    % 
+    % $$0 = A*y + b$$
+    % 
+    %% Public method
+    % We overwrite initialize and solve
+    %
+    % In initialize we call pde.initialize method that computed obj.K,
+    % obj.M, etc., but not obj.A. The definition of b as a dimension
+    % depending zeros vector is necessary to fit pde.initialize's  
+    % interface.        
+    %%
+    % In solve we overwrite pde.solve to force the use of the LINEARGAUSS
+    % solver.
+    %% 
+    % Overload plot method a plot method.       
+    %
+    % Depending from space dimension, it uses line, surface or
+    % colorplot.
+    methods(Access = protected)        
+        function  dy = df(obj,~,y)
+            dy = obj.A*y + obj.b;
+        end
+        function J = jacobian(obj,~,~)
+            J = obj.A;
+        end
+    end
+    
+    methods(Access = public)
+        function initialize(obj,c,a,f)
+            b = zeros(obj.grid.spaceDimension,1);
+            initialize@pde(obj,c,b,a,f); 
+            s = obj.fem.stiffSpring(obj.K+obj.M);                
+            obj.A = -(obj.K+obj.M+obj.Q+s*(obj.H'*obj.H));            
+            obj.b = obj.F+obj.G+s*(obj.H'*obj.R);
+        end
+        function solve(obj,solver)
+            switch nargin
+                case 1
+                    solve@pde(obj,'LINEARGAUSS');
+                case 2
+                    if ~ischar(solver)
+                        MException('ELLIPTIC:WRONGARGUMENTCLASS',...
+                                'The argument must be of class char').throwAsCaller;
+                    end
+                    switch solver
+                        case {'LINEAR' 'LINEARGAUSS' 'AMG'}
+                            fprintf(['User defined solver: ', solver,'\n']);
+                            solve@pde(obj,solver);
+                        otherwise
+                            MException('ELLIPTIC:NOTSUPPORTED',...
+                                ['The solver ',solver,' is not supported']).throwAsCaller;
+                    end
+                otherwise
+                    % The to many arguments exception will be thrown
+                    % automatically.
+            end
+        end
+        function plot(obj,varargin)
+            switch obj.grid.spaceDimension
+                case {1 , 2}
+                    obj.grid.plot(obj.y,varargin{:});
+                case 3
+                    obj.grid.plotFaces(obj.y,varargin{:});
+            end
+        end
+    end
+end
+##### SOURCE END #####
+--></body></html>

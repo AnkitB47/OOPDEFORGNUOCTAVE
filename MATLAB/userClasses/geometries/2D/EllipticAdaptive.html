@@ -1,0 +1,507 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ellipticAdaptive</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-01-24"><meta name="DC.source" content="EllipticAdaptive.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>ellipticAdaptive</h1><!--introduction--><p>Class definition for diffusion equation. It proviedes a solver with an adaptive mesh refinement, solveAdaptive. For that, we derive it from linearDiffusion class and add three public properties to store the coefficient functions and add the an adaptive solver method.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Copy style</a></li><li><a href="#2">Inheritance</a></li><li><a href="#4">Properties with Access = public</a></li></ul></div><h2 id="1">Copy style</h2><p>handle</p><h2 id="2">Inheritance</h2><p>ellipticAdaptive &lt; linearDiffusion</p><pre class="codeinput"><span class="keyword">classdef</span> EllipticAdaptive &lt; Elliptic
+
+    <span class="keyword">properties</span>(Access = public)
+</pre><h2 id="4">Properties with Access = public</h2><div><ul><li>c, a, f (double|char|function_handel)</li></ul></div><p>For the adaptive solver, we need properties to store the coefficient (functions).</p><pre class="codeinput">        c
+        a
+        f
+</pre><pre class="codeinput">    <span class="keyword">end</span>
+
+    methods ( Access = public )
+        <span class="keyword">function</span> initialize(obj,varargin)
+</pre><div><ul><li>initialize IN:self,double|char|function_handel, double|char|function_handel, double|char|function_handel</li></ul></div><p>Intitializes the object. Call it w/o or with three arguments. When calling w/o arguments, the properties obj.c obj.a and obj.f must be set before.</p><p>Example:</p><p>(i) Predefined coefficent functions</p><pre>     obj.c = '1';
+     obj.a = 0;
+     obj.f = @f;
+     obj.initialize()</pre><p>(ii) Set coefficient function via initialize method</p><pre>     obj.initialize('1',0,@f)</pre><pre class="codeinput">            <span class="comment">% (C) 2014 by Uwe Pr&uuml;fert</span>
+            <span class="keyword">switch</span> nargin
+                <span class="keyword">case</span> 4
+                    obj.c = varargin{1};
+                    obj.a = varargin{2};
+                    obj.f = varargin{3};
+                <span class="keyword">case</span> 1
+                    <span class="keyword">if</span> (isempty(obj.c)||isempty(obj.a)||isempty(obj.f))
+                        MException(<span class="string">'PDE:COEFFIENCETS'</span>,<span class="keyword">...</span>
+                            <span class="string">'No coefficient functions set.'</span>).throwAsCaller
+                    <span class="keyword">end</span>
+                <span class="keyword">otherwise</span>
+                    MException(<span class="string">'PDE:WRONGNUMBERARGUMENTS'</span>,<span class="keyword">...</span>
+                        <span class="string">'The number of arguments must be zero or three.'</span>).throwAsCaller
+            <span class="keyword">end</span>
+            b = zeros (obj.grid.spaceDimension ,1) ;
+            initialize@pde(obj,1,obj.c,b,obj.a,obj.f) ;
+            l = obj.fem.stiffSpring(obj.K + obj.M );
+            obj.A = -(obj.K + obj.M + l*(obj.H'* obj.H ) + obj.Q ) ;
+            obj.b = obj.F + l *(obj.H'* obj.R) + obj.G ;
+</pre><pre class="codeinput">        <span class="keyword">end</span>
+
+        <span class="keyword">function</span> solveAdaptive(obj,tol)
+</pre><div><ul><li>solveAdaptive IN:self,double OUT:self</li></ul></div><p>Solves the problem by using an adaptive mesh refinement.</p><p>The number of refinements can be cotrolled by setting solverOptions.maxit, but the maximum number of iterations is 10.</p><p>Example</p><pre>     heatTransfer.solveAdaptive();</pre><pre>     heatTransfer.solveAdaptive(1e-2);</pre><pre class="codeinput">            <span class="comment">% (c) 2015 by Uwe Pr&uuml;fert</span>
+
+            maxit = min(10,obj.solverOptions.maxit);
+            niter = 1;
+            <span class="keyword">if</span> ~obj.initialized
+                MException(<span class="string">'PDE:NOTINITIALIZED'</span>,<span class="keyword">...</span>
+                    <span class="string">'The object is not initialized.'</span>).throwAsCaller
+            <span class="keyword">end</span>
+            <span class="keyword">while</span> true
+
+                obj.y = zeros(obj.grid.nPoints,1);
+                obj.solve() ;
+                <span class="comment">% make it dimension independent</span>
+                <span class="keyword">switch</span> class(obj.c)
+                    <span class="keyword">case</span> <span class="string">'function_handle'</span>
+                        <span class="keyword">switch</span> obj.grid.spaceDimension
+                            <span class="keyword">case</span> 1 <span class="comment">% 1D domain</span>
+                                cc = obj.c(obj.grid.p(1,:));
+                            <span class="keyword">case</span> 2
+                                 cc = obj.c(obj.grid.p(1,:),<span class="keyword">...</span>
+                                     obj.grid.p(2,:));
+                            <span class="keyword">case</span> 3
+                                 cc = obj.c(obj.grid.p(1,:),<span class="keyword">...</span>
+                                     obj.grid.p(2,:),obj.grid.p(2,:));
+                            <span class="keyword">otherwise</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">case</span> <span class="string">'double'</span> <span class="comment">% dimension independent</span>
+                        <span class="keyword">if</span>  isscalar(obj.c)
+                            cc = obj.c*ones(obj.grid.nPoints,1);
+                        <span class="keyword">else</span>
+                            MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                                [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                                 <span class="string">' function_handles or scalar'</span>]).throw ;
+                        <span class="keyword">end</span>
+                    <span class="keyword">case</span> <span class="string">'char'</span>
+                        <span class="keyword">try</span>
+                            x = obj.grid.x;
+                            y = obj.grid.y;
+                            z = obj.grid.z;
+                        <span class="keyword">catch</span>
+                            <span class="comment">% don't catch, try 'n' error code...</span>
+                        <span class="keyword">end</span>
+                        cc = eval(obj.c);
+                        <span class="keyword">if</span>  isscalar(obj.c)
+                            cc = cc*ones(size(obj.grid.p,2),1);
+                        <span class="keyword">elseif</span> length(cc)==obj.grid.nPoints
+                            <span class="comment">% okay</span>
+                        <span class="keyword">else</span>
+                            MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                                [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                                 <span class="string">' function_handles or scalar'</span>]).throw ;
+                        <span class="keyword">end</span>
+
+                    <span class="keyword">otherwise</span>
+                        MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                            [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                             <span class="string">' function_handles or double'</span>]).throw ;
+                <span class="keyword">end</span>
+                <span class="keyword">switch</span> class(obj.a)
+                    <span class="keyword">case</span> <span class="string">'function_handle'</span>
+                        <span class="keyword">switch</span> obj.grid.spaceDimension
+                            <span class="keyword">case</span> 1 <span class="comment">% 1D domain</span>
+                                aa = obj.a(obj.grid.p(1,:));
+                            <span class="keyword">case</span> 2
+                                aa = obj.a(obj.grid.p(1,:),<span class="keyword">...</span>
+                                     obj.grid.p(2,:));
+                            <span class="keyword">case</span> 3
+                                aa = obj.a(obj.grid.p(1,:),<span class="keyword">...</span>
+                                     obj.grid.p(2,:),obj.grid.p(2,:));
+                            <span class="keyword">otherwise</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">case</span> <span class="string">'double'</span>
+                        <span class="keyword">if</span>  isscalar(obj.a)
+                            aa = obj.a*ones(obj.grid.nPoints,1);
+                        <span class="keyword">else</span>
+                            MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                            [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                             <span class="string">' function_handles or scalar'</span>]).throw ;
+                        <span class="keyword">end</span>
+                    <span class="keyword">case</span> <span class="string">'char'</span>
+                        <span class="keyword">try</span>
+                            x = obj.grid.x;
+                            y = obj.grid.y;
+                            z = obj.grid.z;
+                        <span class="keyword">catch</span>
+                            <span class="comment">% don't catch, try 'n' error code...</span>
+                        <span class="keyword">end</span>
+                        aa = eval(obj.a);
+                        <span class="keyword">if</span>  isscalar(aa)
+                            aa = aa*ones(obj.grid.nPoints,1);
+                        <span class="keyword">elseif</span> length(aa)==obj.grid.nPoints
+                            <span class="comment">% okay</span>
+                        <span class="keyword">else</span>
+                            MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                                [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                                 <span class="string">' function_handles or scalar'</span>]).throw ;
+                        <span class="keyword">end</span>
+                    <span class="keyword">otherwise</span>
+                        MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                            [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                            <span class="string">' function_handles or double'</span>]).throw ;
+                <span class="keyword">end</span>
+                <span class="keyword">switch</span> class(obj.f)
+                    <span class="keyword">case</span> <span class="string">'function_handle'</span>
+                        <span class="keyword">switch</span> obj.grid.spaceDimension
+                            <span class="keyword">case</span> 1 <span class="comment">% 1D domain</span>
+                                ff = obj.f(obj.grid.p(1,:));
+                            <span class="keyword">case</span> 2
+                                ff = obj.f(obj.grid.p(1,:),<span class="keyword">...</span>
+                                     obj.grid.p(2,:));
+                            <span class="keyword">case</span> 3
+                                ff = obj.f(obj.grid.p(1,:),<span class="keyword">...</span>
+                                     obj.grid.p(2,:),obj.grid.p(3,:));
+                            <span class="keyword">otherwise</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">case</span> <span class="string">'double'</span>
+                        <span class="keyword">if</span>  isscalar(obj.f)
+                            ff = obj.a*ones(obj.grid.nPoints,1);
+                        <span class="keyword">else</span>
+                            MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                            [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                             <span class="string">' function_handles or scalar'</span>]).throw ;
+                        <span class="keyword">end</span>
+                    <span class="keyword">otherwise</span>
+                        MException(<span class="string">'PDE:WRONGCLASS'</span>,<span class="keyword">...</span>
+                            [<span class="string">'For adaption, all data must be'</span>,<span class="keyword">...</span>
+                             <span class="string">' function_handles or doubel'</span>]).throw ;
+                <span class="keyword">end</span>
+
+                E =  obj.errorInd(cc,aa,ff,1,1,0);
+                <span class="keyword">if</span> max(E)&lt;tol || niter&gt;maxit
+                    <span class="keyword">break</span>
+                <span class="keyword">end</span>
+                indx = obj.selectElements2Refine(E,0.125);
+                obj.grid.refineMesh(indx);
+                obj.initialize();
+                niter = niter + 1;
+                fprintf([<span class="string">'Solve on adaptive refined mesh with '</span>,<span class="keyword">...</span>
+                    num2str(obj.grid.nPoints),<span class="string">' nodes.\n'</span>]);
+            <span class="keyword">end</span>
+</pre><pre class="codeinput">        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+ans = 
+
+  EllipticAdaptive with properties:
+
+                c: []
+                a: []
+                f: []
+              fem: []
+             grid: []
+       odeOptions: [1&times;1 struct]
+    solverOptions: [1&times;1 struct]
+             time: []
+                y: []
+                A: []
+                b: []
+                D: []
+       nTimeSteps: 0
+
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% ellipticAdaptive
+% Class definition for diffusion equation. 
+% It proviedes a solver with an adaptive mesh refinement,
+% solveAdaptive.
+% For that, we derive it from linearDiffusion class and add three public
+% properties to store the coefficient functions and add the an adaptive 
+% solver method.
+%% Copy style
+% handle
+
+%% Inheritance
+% ellipticAdaptive < linearDiffusion  
+classdef EllipticAdaptive < Elliptic
+    
+    properties(Access = public)
+        
+        %% Properties with Access = public        
+        %
+        % * c, a, f (double|char|function_handel)
+        %
+        % For the adaptive solver, we need properties to store the 
+        % coefficient (functions).
+        c 
+        a 
+        f 
+    end  
+    
+    methods ( Access = public )
+        function initialize(obj,varargin)
+            %%
+            % * initialize
+            % IN:self,double|char|function_handel,
+            % double|char|function_handel,
+            % double|char|function_handel
+            % 
+            % Intitializes the object. Call it w/o or with three arguments.
+            % When calling w/o arguments, the properties obj.c obj.a and obj.f must be set
+            % before.
+            % 
+            % Example:
+            %%
+            % 
+            % 
+            % (i) Predefined coefficent functions
+            %             
+            %
+            %       obj.c = '1';
+            %       obj.a = 0;
+            %       obj.f = @f;
+            %       obj.initialize()
+            % 
+            % (ii) Set coefficient function via initialize method
+            %
+            %       obj.initialize('1',0,@f)
+            
+            % (C) 2014 by Uwe Prüfert
+            switch nargin
+                case 4
+                    obj.c = varargin{1};
+                    obj.a = varargin{2};
+                    obj.f = varargin{3};
+                case 1
+                    if (isempty(obj.c)||isempty(obj.a)||isempty(obj.f))                       
+                        MException('PDE:COEFFIENCETS',...
+                            'No coefficient functions set.').throwAsCaller
+                    end
+                otherwise
+                    MException('PDE:WRONGNUMBERARGUMENTS',...
+                        'The number of arguments must be zero or three.').throwAsCaller
+            end
+            b = zeros (obj.grid.spaceDimension ,1) ;        
+            initialize@pde(obj,1,obj.c,b,obj.a,obj.f) ;
+            l = obj.fem.stiffSpring(obj.K + obj.M );            
+            obj.A = -(obj.K + obj.M + l*(obj.H'* obj.H ) + obj.Q ) ;
+            obj.b = obj.F + l *(obj.H'* obj.R) + obj.G ;
+        end
+    
+        function solveAdaptive(obj,tol) 
+            %%
+            % * solveAdaptive IN:self,double OUT:self
+            %
+            % Solves the problem by using an adaptive mesh refinement.
+            % 
+            % The number of refinements can be cotrolled by setting
+            % solverOptions.maxit, but the maximum number of iterations 
+            % is 10.
+            %
+            % Example
+            %
+            %       heatTransfer.solveAdaptive(); 
+            %
+            %       heatTransfer.solveAdaptive(1e-2); 
+            
+            % (c) 2015 by Uwe Prüfert            
+            
+            maxit = min(10,obj.solverOptions.maxit);
+            niter = 1;  
+            if ~obj.initialized
+                MException('PDE:NOTINITIALIZED',...
+                    'The object is not initialized.').throwAsCaller
+            end
+            while true 
+                 
+                obj.y = zeros(obj.grid.nPoints,1);
+                obj.solve() ;
+                % make it dimension independent                
+                switch class(obj.c)
+                    case 'function_handle'                        
+                        switch obj.grid.spaceDimension
+                            case 1 % 1D domain
+                                cc = obj.c(obj.grid.p(1,:));  
+                            case 2
+                                 cc = obj.c(obj.grid.p(1,:),...
+                                     obj.grid.p(2,:));   
+                            case 3
+                                 cc = obj.c(obj.grid.p(1,:),...
+                                     obj.grid.p(2,:),obj.grid.p(2,:));   
+                            otherwise
+                        end
+                    case 'double' % dimension independent
+                        if  isscalar(obj.c)
+                            cc = obj.c*ones(obj.grid.nPoints,1);                            
+                        else
+                            MException('PDE:WRONGCLASS',...
+                                ['For adaption, all data must be',...
+                                 ' function_handles or scalar']).throw ;
+                        end
+                    case 'char'
+                        try
+                            x = obj.grid.x;
+                            y = obj.grid.y;
+                            z = obj.grid.z;
+                        catch
+                            % don't catch, try 'n' error code...
+                        end
+                        cc = eval(obj.c);
+                        if  isscalar(obj.c)
+                            cc = cc*ones(size(obj.grid.p,2),1); 
+                        elseif length(cc)==obj.grid.nPoints
+                            % okay
+                        else
+                            MException('PDE:WRONGCLASS',...
+                                ['For adaption, all data must be',...
+                                 ' function_handles or scalar']).throw ;
+                        end
+                        
+                    otherwise
+                        MException('PDE:WRONGCLASS',...
+                            ['For adaption, all data must be',...
+                             ' function_handles or double']).throw ;
+                end 
+                switch class(obj.a)
+                    case 'function_handle'
+                        switch obj.grid.spaceDimension
+                            case 1 % 1D domain
+                                aa = obj.a(obj.grid.p(1,:));  
+                            case 2
+                                aa = obj.a(obj.grid.p(1,:),...
+                                     obj.grid.p(2,:));   
+                            case 3
+                                aa = obj.a(obj.grid.p(1,:),...
+                                     obj.grid.p(2,:),obj.grid.p(2,:));   
+                            otherwise
+                        end
+                    case 'double'
+                        if  isscalar(obj.a)
+                            aa = obj.a*ones(obj.grid.nPoints,1);
+                        else
+                            MException('PDE:WRONGCLASS',...
+                            ['For adaption, all data must be',...
+                             ' function_handles or scalar']).throw ;
+                        end
+                    case 'char'
+                        try
+                            x = obj.grid.x;
+                            y = obj.grid.y;
+                            z = obj.grid.z;
+                        catch
+                            % don't catch, try 'n' error code...
+                        end
+                        aa = eval(obj.a);
+                        if  isscalar(aa)
+                            aa = aa*ones(obj.grid.nPoints,1); 
+                        elseif length(aa)==obj.grid.nPoints
+                            % okay
+                        else
+                            MException('PDE:WRONGCLASS',...
+                                ['For adaption, all data must be',...
+                                 ' function_handles or scalar']).throw ;
+                        end
+                    otherwise
+                        MException('PDE:WRONGCLASS',...
+                            ['For adaption, all data must be',...
+                            ' function_handles or double']).throw ;
+                end 
+                switch class(obj.f)
+                    case 'function_handle'
+                        switch obj.grid.spaceDimension
+                            case 1 % 1D domain
+                                ff = obj.f(obj.grid.p(1,:));  
+                            case 2
+                                ff = obj.f(obj.grid.p(1,:),...
+                                     obj.grid.p(2,:));   
+                            case 3
+                                ff = obj.f(obj.grid.p(1,:),...
+                                     obj.grid.p(2,:),obj.grid.p(3,:));   
+                            otherwise
+                        end
+                    case 'double'
+                        if  isscalar(obj.f)
+                            ff = obj.a*ones(obj.grid.nPoints,1);
+                        else
+                            MException('PDE:WRONGCLASS',...
+                            ['For adaption, all data must be',...
+                             ' function_handles or scalar']).throw ;
+                        end
+                    otherwise
+                        MException('PDE:WRONGCLASS',...
+                            ['For adaption, all data must be',...                      
+                             ' function_handles or doubel']).throw ;
+                end  
+
+                E =  obj.errorInd(cc,aa,ff,1,1,0);                
+                if max(E)<tol || niter>maxit
+                    break
+                end
+                indx = obj.selectElements2Refine(E,0.125);
+                obj.grid.refineMesh(indx); 
+                obj.initialize();
+                niter = niter + 1;             
+                fprintf(['Solve on adaptive refined mesh with ',...
+                    num2str(obj.grid.nPoints),' nodes.\n']);
+            end           
+        end
+    end
+end
+
+##### SOURCE END #####
+--></body></html>

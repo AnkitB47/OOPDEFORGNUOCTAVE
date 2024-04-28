@@ -1,0 +1,194 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>A boundary value problem in  with non-constant coefficnets</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-01-24"><meta name="DC.source" content="run_ellipticAdaptive.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>A boundary value problem in <img src="run_ellipticAdaptive_eq02243227017317752302.png" alt="$R^2$"> with non-constant coefficnets</h1><pre>The problem is solved by  using adaptive mesh refinement.</pre><pre class="codeinput"><span class="keyword">function</span> run_ellipticAdaptive()
+</pre><p>Call constructor</p><pre class="codeinput">    pde = EllipticAdaptive() ;
+</pre><p>Define the grid, here a unit circle with meshwidth h = 0.125</p><pre class="codeinput">    pde.grid = UnitCircle(0.125);
+</pre><p>Use P1 elements</p><pre class="codeinput">    pde.fem = Lagrange12D();
+</pre><p>Assign/define coefficient functions. For a and f we use anonymous functions.</p><pre class="codeinput">    pde.c = @c;
+    pde.a = @(x,y) 0.0;
+    pde.f = @(x,y) 10.0;
+</pre><p>Simulate stiff-spring technique to approxiamte Homogeneous Dirichlet BCs.</p><pre class="codeinput">    pde.setBoundaryConditions(<span class="string">'Robin'</span>,{<span class="string">'100'</span> <span class="string">'0'</span>});
+</pre><p>Initialize the problem, here without any parameters.</p><pre class="codeinput">    pde.initialize() ;
+</pre><p>Set maximum number of refinements</p><pre class="codeinput">    pde.solverOptions.maxit = 5;
+</pre><p>Call de apative solver. Note that solver is part of EllipticAdaptive class.</p><pre class="codeinput">    pde.solveAdaptive(1e-3);
+</pre><pre class="codeoutput">Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.000817 seconds for solving pde problem.
+Solve on adaptive refined mesh with 333 nodes.
+Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.000887 seconds for solving pde problem.
+Solve on adaptive refined mesh with 554 nodes.
+Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.001576 seconds for solving pde problem.
+Solve on adaptive refined mesh with 830 nodes.
+Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.001609 seconds for solving pde problem.
+Solve on adaptive refined mesh with 1275 nodes.
+Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.002485 seconds for solving pde problem.
+Solve on adaptive refined mesh with 1983 nodes.
+Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.003912 seconds for solving pde problem.
+</pre><p>Plot solution</p><pre class="codeinput">    figure(1);
+    pde.grid.plot(pde.y,<span class="string">'LineStyle'</span>,<span class="string">'-'</span>); view(2),drawnow
+</pre><img vspace="5" hspace="5" src="run_ellipticAdaptive_01.png" alt=""> <p>Plot coefficent function</p><pre class="codeinput">    figure(2)
+    mp = pde.grid.midpts;
+    xm = mp(1,:);
+    ym = mp(2,:);
+    pde.grid.plot(pde.c(xm,ym),<span class="string">'LineStyle'</span>,<span class="string">'-'</span>); view(2),drawnow
+</pre><img vspace="5" hspace="5" src="run_ellipticAdaptive_02.png" alt=""> <pre class="codeinput"><span class="keyword">end</span>
+</pre><p>Define coefficent function c</p><pre class="codeinput"><span class="keyword">function</span> val = c(x,y)
+    val = 1*ones(size(x));
+    val(sqrt(x.^2+y.^2)&lt;0.7) = .80;
+    val(sqrt(x.^2+y.^2)&lt;0.4) = 2;
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%  A boundary value problem in $R^2$ with non-constant coefficnets
+%
+%  The problem is solved by  using adaptive mesh refinement.
+
+function run_ellipticAdaptive()
+%%
+% Call constructor
+
+    pde = EllipticAdaptive() ;
+    %%
+    % Define the grid, here a unit circle with meshwidth h = 0.125
+    
+    pde.grid = UnitCircle(0.125);
+    
+    %%
+    % Use P1 elements
+    pde.fem = Lagrange12D();    
+ 
+    %%
+    % Assign/define coefficient functions. For a and f we use anonymous
+    % functions.
+    pde.c = @c; 
+    pde.a = @(x,y) 0.0;
+    pde.f = @(x,y) 10.0;
+    
+    %%
+    % Simulate stiff-spring technique to approxiamte
+    % Homogeneous Dirichlet BCs.
+    
+    pde.setBoundaryConditions('Robin',{'100' '0'}); 
+    %%
+    % Initialize the problem, here without any parameters.
+    pde.initialize() ;
+    
+    %%
+    % Set maximum number of refinements
+    pde.solverOptions.maxit = 5;
+    %%
+    % Call de apative solver. Note that solver is part of EllipticAdaptive
+    % class.
+    pde.solveAdaptive(1e-3);
+    
+    %%
+    % Plot solution
+    figure(1);
+    pde.grid.plot(pde.y,'LineStyle','-'); view(2),drawnow
+      
+    %%
+    % Plot coefficent function
+    
+    figure(2)
+    mp = pde.grid.midpts;
+    xm = mp(1,:);
+    ym = mp(2,:);
+    pde.grid.plot(pde.c(xm,ym),'LineStyle','-'); view(2),drawnow
+   
+end   
+
+
+%%
+% Define coefficent function c
+ 
+
+function val = c(x,y)
+    val = 1*ones(size(x));
+    val(sqrt(x.^2+y.^2)<0.7) = .80;    
+    val(sqrt(x.^2+y.^2)<0.4) = 2;
+end
+
+##### SOURCE END #####
+--></body></html>

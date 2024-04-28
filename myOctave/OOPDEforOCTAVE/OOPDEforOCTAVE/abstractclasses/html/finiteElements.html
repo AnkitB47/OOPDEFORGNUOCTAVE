@@ -1,0 +1,516 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>finiteElements</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-03-09"><meta name="DC.source" content="finiteElements.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>finiteElements</h1><!--introduction--><p>Abstract class to build finite elements.</p><p>Copy behavior = handle.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Public, constant Properties:</a></li><li><a href="#2">Public, constant abstract property:</a></li><li><a href="#3">Public methods</a></li><li><a href="#15">Static methods with Access = public</a></li><li><a href="#19">Static methods with Access = protected</a></li><li><a href="#25">Abtract methods with Access = public</a></li><li><a href="#29">Static abtract methods with Access = public:</a></li><li><a href="#33">Static abtract methods with Access = protected:</a></li></ul></div><h2 id="1">Public, constant Properties:</h2><div><ul><li>wrongNumberInputs (MException)</li><li>wrongNumberOutputs (MException)</li><li>wrongFormat (MException)</li><li>wrongClass (MException)</li><li>wrongSize (MException)</li></ul></div><h2 id="2">Public, constant abstract property:</h2><div><ul><li>idx (double)</li></ul></div><h2 id="3">Public methods</h2><p>The methods assema and convection are actually not abstract, but behave like abstract functions.</p><div><ul><li>errorInd</li></ul></div><div><ul><li>assema IN:self,gridd,double|char|function_handle,             double|char|function_handle,                 double|char|function_handle</li></ul></div><p>The assemble method for finite elements. It assembles the Stiffness matrix K, the Mass Matrix M and the RHS vector F in sparse format. If you call it with two output arguments, then S = K+M.</p><p>Call:</p><pre>     [K,M,F] = finiteElements.assema(grid,c,a,f)
+     [S,F] = finiteElements.assema(grid,c,a,f)</pre><div><ul><li>convection IN:self,gridd,double|char|function_handle</li></ul></div><p>Method that computes the convection matrix.</p><p>Call:</p><pre>     B = finiteElements.convection(gridd,bvec)</pre><div><ul><li>sparsityPattern IN:self,grid[,double[,double,double,double,double]] OUT:double</li></ul></div><p>Method that computes the sparsity pattern of the system matrices.</p><p>Call:</p><pre>      B = finiteElements.sparsityPattern(gridObject)
+      B = finiteElements.sparsityPattern(gridObject,A)
+      B = finiteElements.sparsityPattern(gridObject,K,M,C,Q,H)</pre><p>A should be obj.A, intesionally for defining sparsity patterns for systems of PDEs K,M,C,Q,H  should be the matrices from a call of obj.assema, obj.assemb and obj.convection The empty call computes all relevant matrices internally.</p><div><ul><li>sourceTermMatrix IN:self,gridd OUT: double</li></ul></div><p>Computes the matrix M such that F = M*f, where f ist a vector of length #Elements which contrains the values of the source f in the centers of each element. This is usefull if you want to calculate the source from a given vector, e.g.  when solving coupled systems where the solution of one equation is the source for another equation.</p><p>Call:</p><pre>      M = finiteElements.sourceTermMatrix(gridd)</pre><div><ul><li>errorInd IN:self,gridd,double,double,double[,double,double,double] OUT:double</li></ul></div><p>Call:</p><pre>     errorPerElement = finiteElements.errorInd(grid,u,c,a,f[,alfa,beta,m])</pre><p>Method that computes the error for every element. The measure is taken from pdetool. Note that errorInd works only for scalar PDEs. For Systems, call it N times with the source and solution component. Note that this may not really helpfull when applying on coupled systems on non linear PDEs.</p><h2 id="15">Static methods with Access = public</h2><div><ul><li>stiffSpring IN:double OUT:double</li></ul></div><p>Computes a guess for the stiff-spring coefficient L = obj.stiffSpring(M). M should be the Systems Matrix, e.g. M = K+M+C (C) 2013 by Uwe Pr&uuml;fert</p><h2 id="19">Static methods with Access = protected</h2><div><ul><li>localErrorL2 IN:self,double,double,double OUT:double</li></ul></div><p>localErrorL2 is made for local error measurment. It may be overwritten in higher order FE classes. However, for linear FEs it works for every dimension localErrorL2 computes the <img src="finiteElements_eq11809360406450963432.png" alt="$L^2$"> -norm of f-a*u Evaluates f-a*u in the center of Element and multiplies with area. Result is per element. This should work for all linear P1 elements in 1D--3D. May be overwritten in P2 etc. classes.</p><p>Call:</p><pre>     error = obj.localErrorL2(u,a,f).</pre><p>Note that u, a and f  must be vectors or scalars, not function handles.</p><div><ul><li>aCoefficients IN:grid1D,double|char|function_handle, double|char|function_handle,double|char|function_handle OUT:double,double,double</li></ul></div><p>Methods that compute the numerical values of the coefficients c, a, and f from various formats.</p><h2 id="25">Abtract methods with Access = public</h2><div><ul><li>createMatrixEntries IN:self,grid1D,double|char|function_handle, double|char|function_handle,double|char|function_handle</li></ul></div><p>Method that computes the entries uses by assema method. Arguments are the grid, and the coefficients c, a, f.</p><div><ul><li>createConvectionEntries IN:self,grid1D,double|char|function_handle OUT:double</li></ul></div><p>Method that computes the entries uses by convection method. Arguments are the grid, and the coefficient b.</p><h2 id="29">Static abtract methods with Access = public:</h2><div><ul><li>makeIndex IN:double,double OUT:double,double,double</li></ul></div><p>Method that computes a index structure to be uses to create sparse matrices within assema, etc.</p><div><ul><li>assemb IN:grid1D OUT:double,double,double:double</li></ul></div><p>Method that assembles the boundary matrices and vectors.</p><p>Call:</p><pre>     [Q,G,H,R] = finiteElements1D.assemb(grid1D)</pre><h2 id="33">Static abtract methods with Access = protected:</h2><div><ul><li>fluxThroughEdges IN:gridd,double,double OUT:double</li><li>fluxJumps IN:gridd,double,double OUT:double</li></ul></div><div><ul><li>makeJ IN:grid1D OUT double</li></ul></div><p>Computes the value of the Jacobian determinant.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+  %% finiteElements
+    %
+    % Abstract class to build finite elements.
+    %
+    % Copy behavior = handle.
+    % 
+    %% Public, constant Properties:
+    % *    wrongNumberInputs (MException)
+    % *    wrongNumberOutputs (MException)
+    % *    wrongFormat (MException)
+    % *    wrongClass (MException)
+    % *    wrongSize (MException)
+    %
+    %% Public, constant abstract property:    
+    % * idx (double)
+         
+    
+    
+    % Change log: 
+    % March 2017: Error in localErrorL2 corrected.
+    % (c) 2015 by U.Prüfert
+classdef (Abstract) finiteElements < handle    
+    properties(Constant)
+        % It defines only universal error Objects.
+        wrongNumberInputs = MException('FINITEELEMENTS:WRONGNUMBERINPUTS',...
+                        'The number of input arguments is wrong.');
+        wrongNumberOutputs = MException('FINITEELEMENTS:WRONGNUMBERINPUTS',...
+                        'The number of output arguments is wrong.');         
+        wrongFormat = MException('FINITEELEMENTS:WRONGFORMAT',...
+                                    'reading geometry data failed, maybe incorrect format.');
+        wrongClass = MException('FINITEELEMENTS:WRONGCLASS',...
+                                    'Wrong argument class.');
+        wrongSize = MException('FINITEELEMENTS:WRONGSIZE',...
+                                    'Wrong sized arguments.');                        
+    end  
+  
+    properties(Abstract = true, Constant = true, Hidden = true)
+        idx@double 
+    end
+    
+    methods(Access = public)
+        %% Public methods
+        % 
+        % The methods assema and convection are actually not abstract, but
+        % behave like abstract functions.
+        %
+        % * errorInd        
+        
+        %
+        
+        % Assembling of all Matrices valid for all ...        
+        function [varargout] = assema(obj,gridObj,cf,af,ff)
+            %%
+            % * assema IN:self,gridd,double|char|function_handle, 
+            %             double|char|function_handle, 
+            %                 double|char|function_handle
+            %
+            % The assemble method for finite elements.
+            % It assembles the Stiffness matrix K, the Mass Matrix M and the RHS 
+            % vector F in sparse format. If you call it with two output arguments, then
+            % S = K+M. 
+            %
+            % Call:
+            %
+            %       [K,M,F] = finiteElements.assema(grid,c,a,f)
+            %       [S,F] = finiteElements.assema(grid,c,a,f)
+            %
+            %  
+            
+            
+            % (c) 2013 by Uwe Prüfert
+            % specialized methods dep. on element type
+            scl = superclasses(gridObj);
+            if isempty(scl) 
+                obj.wrongClass.throw;
+            end
+            for k = 1:length(scl)                
+                isgrid = strcmp(scl{k},'gridd');
+                if isgrid
+                    break;
+                else
+                    isgrid = false;
+                end
+            end
+            if ~isgrid
+                obj.wrongClass.throw;
+            end
+            [K,M,F] = obj.createMatrixEntries(gridObj,cf,af,ff);
+            [idx0,idx1,idx2] =  obj.makeIndex(gridObj.t(obj.idx,:),gridObj.nElements); 
+            % do the sparse magic...  
+            switch nargout
+                case 2  
+                    varargout{1} = sparse(idx1,idx2,K+M,gridObj.nPoints,gridObj.nPoints); 
+                    varargout{2} = sparse(idx0,1,F,gridObj.nPoints,1);
+                case 3  
+                    varargout{1} = sparse(idx1,idx2,K,gridObj.nPoints,gridObj.nPoints);  
+                    varargout{2} = sparse(idx1,idx2,M,gridObj.nPoints,gridObj.nPoints);
+                    varargout{3} = sparse(idx0,1,F,gridObj.nPoints,1);
+                otherwise
+                    throw(obj.wrongNumberOutputs)
+            end
+        end
+        
+        function B = convection(obj,gridObj,b)
+            %%
+            %
+            % * convection IN:self,gridd,double|char|function_handle
+            %
+            % Method that computes the convection matrix.
+            %
+            % Call:
+            %
+            %       B = finiteElements.convection(gridd,bvec) 
+
+            % (C) 2013 by Uwe Prüfert
+        
+            
+            scl = superclasses(gridObj);
+            for k = 1:length(scl)
+                isgrid = strcmp(scl{k},'gridd');
+                if isgrid
+                    break;
+                end
+            end
+            if ~isgrid
+                obj.wrongClass.throwAsCaller;
+            end          
+            [~,idx1,idx2] = obj.makeIndex(gridObj.t(obj.idx,:),gridObj.nElements);
+            val = obj.createConvectionEntries(gridObj,b);
+            B = sparse(idx1,idx2,val,gridObj.nPoints,gridObj.nPoints);    
+        end
+        
+        
+        function B = sparsityPattern(obj,gridObj,varargin)
+            %%
+            % * sparsityPattern IN:self,grid[,double[,double,double,double,double]] OUT:double
+            % 
+            % Method that computes the sparsity pattern of the system
+            % matrices.
+            %
+            % Call:
+            %
+            %        B = finiteElements.sparsityPattern(gridObject)
+            %        B = finiteElements.sparsityPattern(gridObject,A)
+            %        B = finiteElements.sparsityPattern(gridObject,K,M,C,Q,H)
+            %       
+            % A should be obj.A, intesionally for defining sparsity patterns
+            % for systems of PDEs 
+            % K,M,C,Q,H  should be the matrices from a call of obj.assema,
+            % obj.assemb and obj.convection
+            % The empty call computes all relevant matrices internally. 
+            if ~isa(gridObj,'gridd')
+                 obj.wrongClass.throw
+            end
+            
+            switch length(varargin)
+                case 0  % no matrices given
+                    [K,M,~] = obj.assema(gridObj,'1','1','1');
+                    [Q,~,H,~] = obj.assemb(gridObj);
+                    C = obj.convection(gridObj,ones(size(gridObj.p(:,1))));
+                    [indx1,indx2,s] = find(K+M+C+(H'*H)+Q);
+                    B = sparse(indx1,indx2,s~=0);                    
+                case 1  % whole matrix
+                    [indx1,indx2,s] = find(varargin{1});
+                    B = sparse(indx1,indx2,s~=0);                   
+                case 5  % all relevant matrices in order K,M,C,Q,H
+                    [indx1,indx2,s] = find(varargin{1}+...
+                                           varargin{2}+...
+                                           varargin{3}+...
+                                           varargin{4}+...
+                                           varargin{5}'*varargin{5});
+                    B = sparse(indx1,indx2,s~=0); 
+                otherwise
+                    obj.wrongNumberInputs.throwAsCaller;
+            end
+        end
+        
+        
+        
+        
+        function M = sourceTermMatrix(obj,grid) 
+            %%
+            % * sourceTermMatrix IN:self,gridd OUT: double
+            %
+            % Computes the matrix M such that F = M*f,
+            % where f ist a vector of length #Elements which contrains the
+            % values of the source f in the centers of each element. This
+            % is usefull if you want to calculate the source from a given
+            % vector, e.g.  when solving coupled systems where the solution
+            % of one equation is the source for another equation.
+            %
+            % Call:
+            %
+            %        M = finiteElements.sourceTermMatrix(gridd)
+            
+            % (c) 2016 Uwe Pruefert.
+           
+            idx1 = reshape(grid.t(1:grid.nPointsInElements,:),...
+                1,grid.nElements*grid.nPointsInElements);
+            idx2 = reshape(repmat(1:grid.nElements,grid.nPointsInElements,1),...
+                1,grid.nElements*grid.nPointsInElements); 
+        
+            M = sparse(idx2,idx1,reshape(obj.F*obj.makeJ(grid),1,grid.nPointsInElements*grid.nElements),grid.nElements,grid.nPoints)';
+        end
+        
+        function errorPerElement = errorInd(obj,gridObj,y,c,a,f,alpha,beta,m)
+            %%
+            % * errorInd
+            % IN:self,gridd,double,double,double[,double,double,double]
+            % OUT:double
+            %
+            % Call:
+            %
+            %       errorPerElement = finiteElements.errorInd(grid,u,c,a,f[,alfa,beta,m])
+            %
+            % Method that computes the error for every element. The measure is
+            % taken from pdetool. Note that errorInd works only for scalar
+            % PDEs. For Systems, call it N times with the source and solution
+            % component. Note that this may not really helpfull when applying
+            % on coupled systems on non linear PDEs.
+        
+            switch nargin
+                case 6
+                    alpha = 1;   beta = 1;   m = 2;
+                case 8
+                    m = 2; 
+                case 9
+                    % okay
+                otherwise
+                    obj.wrongNumberInputs.throwAsCaller; 
+            end
+            % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+            % This may dimension be independent but may depend from
+            % element-type. 
+            % Compute areas and side lengths, method from grid-class
+            [sideLength,~]= gridObj.sideLengthAndArea();
+            
+            % L2 norm of || f - a * u || over triangles f and a are element
+            % data and u node. localError is abstract! The following calls
+            % may depend from element-type and hence also from mesh -
+            % extended or not.
+            normFminusau = obj.localErrorL2(gridObj,y,a,f);
+            
+            % multiply by triangle's longes side 
+            normFminusau = normFminusau.*max(sideLength).^m;
+            
+            %    flux jumps computed by assembly of ddncu into obj.nPoints
+            %    x obj.nPoints sparse matrix jmps(i,j) becomes abs(jump
+            %    across edge between nodes i and j). note that sparse(...)
+            %    accepts duplicates of indices and performs summation !
+            %    (i.e., the flux differences )
+            
+            
+            % fluxes through edges, static and abstract method
+            fluxThroughElementEdges = obj.fluxThroughEdges(gridObj,y,c);           
+           
+            
+            % computeFluxJumps static and abstract method
+            jumps = obj.fluxJumps(gridObj,fluxThroughElementEdges,m);
+            % okay, all methods are abstract and static and should work for 1DREPLACE_WITH_DASH_DASH3D
+            % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-           
+          
+            errorPerElement = alpha*normFminusau + beta*sqrt(0.5*jumps);
+        end
+    end
+    
+    methods(Static,Access = public)
+        %% Static methods with Access = public        
+        
+        function L = stiffSpring(M)
+            %%
+            % * stiffSpring IN:double OUT:double
+            %
+            % Computes a guess for the stiff-spring coefficient
+            % L = obj.stiffSpring(M).
+            % M should be the Systems Matrix, e.g. M = K+M+C
+            % (C) 2013 by Uwe Prüfert
+            L = 1e3*norm(M,1);
+        end
+    end
+     
+    methods(Access = public)    
+        function disp(obj)
+            disp(['    ',class(obj)])
+        end
+    end
+     
+    methods(Static,Access = protected) 
+        %% Static methods with Access = protected
+        
+        function localL2 = localErrorL2(obj,u,a,f)
+            %%
+            % * localErrorL2 IN:self,double,double,double OUT:double
+            %
+            %
+            % localErrorL2 is made for local error measurment. It may be
+            % overwritten in higher order FE classes. However, for linear FEs
+            % it works for every dimension
+            % localErrorL2 computes the 
+            % $L^2$
+            % -norm of f-a*u
+            % Evaluates f-a*u in the center of Element and multiplies with
+            % area. Result is per element. This should work for all linear
+            % P1 elements in 1DREPLACE_WITH_DASH_DASH3D. May be overwritten in P2 etc. classes.
+            %
+            % Call:
+            %
+            %       error = obj.localErrorL2(u,a,f).
+            %
+            % Note that u, a and f  must be vectors or scalars, not function
+            % handles. 
+            
+            
+            % (c) 2015 Uwe Prüfert
+            % Changelog May 4th 2105: Make it dimension independent
+
+            % This must be (abstract) in the gridxD classes. 
+            % 
+            % In 1D and 3D may area be
+            % misleading: It is the volume of the lement and length is the
+            % length or area of the edge or boundary 
+            [~,area] = obj.sideLengthAndArea;
+
+            if isscalar(f)
+                f = ones(1,obj.nElements)*f;
+            elseif min(size(f))==1&&max(size(f))==obj.nPoints
+                f = obj.point2Center(f);
+                f = f(:)';             
+            elseif min(size(f))==1&&max(size(f))==obj.nElements
+                f = f(:)';                
+            else
+                MException(obj.wrongInputFormatID,...
+                    [obj.wrongInputFormatStr,...
+                    ' must be vector of lenght np or ne,  or must be a  scalar.']).throwAsCaller;
+            end
+            if isscalar(a)
+                a =ones(1,obj.nElements)*a;
+            elseif min(size(a))==1&&max(size(a))==obj.nPoints
+                a = obj.point2Center(a);
+                a = a(:)';             
+            elseif min(size(a))==1&&max(size(a))==obj.nElements
+                a = a(:)';                
+            else
+                MException(obj.wrongInputFormatID,...
+                    [obj.wrongInputFormatStr,...
+                    ' must be vector of lenght np or ne,  or must be a  scalar.']).throwAsCaller;
+            end 
+           
+            localL2 = sqrt((f-a.*obj.point2Center(u)).^2.*area);         
+        end
+        
+        function [cval,aval,fval] =  aCoefficients(gridObj,cc,aa,ff)
+            %%
+            % * aCoefficients IN:grid1D,double|char|function_handle,
+            % double|char|function_handle,double|char|function_handle
+            % OUT:double,double,double
+            %
+            % Methods that compute the numerical values of the coefficients
+            % c, a, and f from various formats.
+            %
+            [cval,aval,fval] = gridObj.aCoefficientsMpt(cc,aa,ff);
+        end
+        
+        function bval = convCoefficients(gridObj,b)
+            %
+            % * convCoefficients IN:grid1D,double|char|function_handle            
+            % OUT:double,double,double
+            %
+            % Methods that compute the numerical values of the coefficient
+            % b from various formats. 
+            %
+            bval = gridObj.convCoefficientsMpt(b);
+        end
+    end
+    
+    
+    
+    % Declarations of abstract methods   
+    methods(Abstract = true, Access = public) 
+        %% Abtract methods with Access = public
+        %
+        [K,M,F] = createMatrixEntries(obj,gridObj,cf,af,ff);
+        %%
+        % * createMatrixEntries IN:self,grid1D,double|char|function_handle,
+        % double|char|function_handle,double|char|function_handle
+        %
+        % Method that computes the entries uses by assema method.
+        % Arguments are the grid, and the coefficients c, a, f. 
+        %
+        val = createConvectionEntries(obj,gridObj,b);
+        %%
+        % * createConvectionEntries IN:self,grid1D,double|char|function_handle OUT:double
+        %
+        % Method that computes the entries uses by convection method.
+        % Arguments are the grid, and the coefficient b. 
+        %  
+    end
+    
+    methods(Abstract = true, Static = true, Access = public) 
+        %% Static abtract methods with Access = public:    
+        %        
+    
+        [idx0,idx1,idx2] = makeIndex(idx,nElements);  
+        %%
+        % * makeIndex IN:double,double OUT:double,double,double
+        %
+        % Method that computes a index structure to be uses to create
+        % sparse matrices within assema, etc.
+        %
+        [Q,G,H,R] = assemb(gridObj); 
+        %% 
+        % * assemb IN:grid1D OUT:double,double,double:double
+        % 
+        % Method that assembles the boundary matrices and vectors.
+        %
+        % Call:
+        % 
+        %       [Q,G,H,R] = finiteElements1D.assemb(grid1D)
+            %
+    end
+    
+    methods(Abstract,Static,Access = protected)
+        %% Static abtract methods with Access = protected:    
+        % * fluxThroughEdges IN:gridd,double,double OUT:double
+        % * fluxJumps IN:gridd,double,double OUT:double       
+        
+        % Functions for discretization error handling: adaptive error
+        % indicator etc. NOTE: Tricky! These methods are static. The argument
+        % gridObbj may differ from element-type to element-type.
+        fluxThrougElementEdges= fluxThroughEdges(gridObj,u,c) 
+        jumps = fluxJumps(gridObj,fluxThroughElementEdges,order)
+        J = makeJ(gridObj);
+        %%
+        % * makeJ IN:grid1D OUT double
+        %
+        % Computes the value of the Jacobian determinant.
+        %
+    end    
+end
+
+
+##### SOURCE END #####
+--></body></html>

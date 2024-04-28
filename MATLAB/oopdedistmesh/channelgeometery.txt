@@ -1,0 +1,8 @@
+# Polyhedral Geometry File
+# Dimension (2d)
+dimension 2
+
+# Vertices (x, y, [z])
+vertex -0.000000 -0.000000
+vertex 0.597759 0.726528
+

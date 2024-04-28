@@ -1,0 +1,498 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>A boundary value problem in </title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-10-24"><meta name="DC.source" content="run_elliptic2D.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>A boundary value problem in <img src="run_elliptic2D_eq02243227017317752302.png" alt="$R^2$"></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">First Example</a></li><li><a href="#13">Second example.</a></li><li><a href="#34">Use as Utility</a></li></ul></div><h2 id="1">First Example</h2><p>Define the pde. For an elliptic PDE</p><p><img src="run_elliptic2D_eq00147523660232787629.png" alt="$$\nabla \cdot (c(x) \nabla u) + a u = f$$"></p><pre class="codeinput">clc
+</pre><p>We use Elliptic class.</p><pre class="codeinput">    elliptic = Elliptic()
+</pre><pre class="codeoutput">
+elliptic = 
+
+  Elliptic with properties:
+
+              fem: []
+             grid: []
+       odeOptions: [1&times;1 struct]
+    solverOptions: [1&times;1 struct]
+             time: []
+                y: []
+                A: []
+                b: []
+                D: []
+       nTimeSteps: 0
+
+</pre><p>Define an unit circle</p><pre class="codeinput">    elliptic.grid = UnitCircle(0.125)
+</pre><pre class="codeoutput">
+elliptic = 
+
+  Elliptic with properties:
+
+              fem: []
+             grid: [1&times;1 UnitCircle]
+       odeOptions: [1&times;1 struct]
+    solverOptions: [1&times;1 struct]
+             time: []
+                y: []
+                A: []
+                b: []
+                D: []
+       nTimeSteps: 0
+
+</pre><p>For linear elements on 2D domain use Lagrange12D</p><pre class="codeinput">    elliptic.fem = Lagrange12D()
+</pre><pre class="codeoutput">
+elliptic = 
+
+  Elliptic with properties:
+
+              fem: [1&times;1 Lagrange12D]
+             grid: [1&times;1 UnitCircle]
+       odeOptions: [1&times;1 struct]
+    solverOptions: [1&times;1 struct]
+             time: []
+                y: []
+                A: []
+                b: []
+                D: []
+       nTimeSteps: 0
+
+</pre><p>Note when using linear elements, don't call extendMesh. Otherwise, an exeption will be thrown.</p><pre class="codeinput">    <span class="comment">%Refine the mesh two times uniformly</span>
+    elliptic.grid.refineUniformly(2)
+</pre><p>Define Dirichlet boundary conditions</p><pre class="codeinput">    elliptic.setBoundaryConditions(<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'sin(s*4).*sin(7*s).*sin(s)'</span>);
+</pre><p>Call initialize. Parameters are diffusity c = 1, a = 0 and source f = 0.</p><pre class="codeinput">    elliptic.initialize(1,0,0);
+</pre><p>Solve linear proeblem. Use Algebraic multigrid solver by 'AMG'. Note that AMG needs   Ilupack. If Ilupack is not availiable, try 'LINEARGAUSS' or 'LINEAR' solver.</p><pre class="codeinput">    elliptic.solve(<span class="string">'LINEARGAUSS'</span>);
+</pre><pre class="codeoutput">User defined solver: LINEARGAUSS
+Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.009451 seconds for solving pde problem.
+</pre><p>Create (if there is no figure 1) and clear the figure.</p><pre class="codeinput">    figure(1)
+    clf
+</pre><img vspace="5" hspace="5" src="run_elliptic2D_01.png" alt=""> <p>Plot the result. Since the mesh is rather fine, we use "LineStyle" = 'none' to supress printing the black edges of the triangles.</p><pre class="codeinput">    elliptic.plot(<span class="string">'LineStyle'</span>,<span class="string">'-'</span>);
+    colormap <span class="string">cool</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+</pre><img vspace="5" hspace="5" src="run_elliptic2D_02.png" alt=""> <h2 id="13">Second example.</h2><p>PDE on unit square with P2 elements and mixed Boundary conditions</p><p>This class uses stiff-spring technique to involve Dirichlet boundary conditions. For an example using Lagrange multiplier technique use</p><pre class="codeinput">          elliptic = EllipticLagrange();
+
+    <span class="comment">%</span>
+</pre><p>Define an L-shaped domain.</p><pre class="codeinput">    elliptic.grid = UnitSquare(0.125);
+</pre><p>For using  P2 elements you must first extend the mesh</p><pre class="codeinput">        elliptic.grid.extendMesh;
+    <span class="comment">% Use now P2 elements</span>
+    <span class="comment">%</span>
+          elliptic.fem = Lagrange22D();
+</pre><p>The L-Shaped object created by Lshape class has six boundary segments. You can check how many boundary segments a geometry has by calling elliptic.grid.nBoundarySegments. The method elliptic.grid.identifyBoundarySegment provides a figure where the boundary segments can be identified by color  and number.</p><p>Three Dirichlet, one Neuman BC.</p><pre class="codeinput">    elliptic.setBoundaryConditions(<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'sin(pi*s).^3'</span>,<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'y'</span>,<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'x'</span>,<span class="keyword">...</span>
+        <span class="string">'Neumann'</span>,<span class="string">'0'</span>);
+</pre><p>Call initialize. Parameters are diffusity c = 0.1, a = 0 and source f = 10.</p><pre class="codeinput">    elliptic.initialize(1,0,10);
+</pre><pre class="codeoutput">
+Warning: Two or more Dirichlet boundary segments have common points.
+In this case, the boundary value function may be not continuous.
+The value tha appears first in the arguments 
+will be taken, the second apperaring will be ignored.
+
+</pre><p>Solve linear proeblem. Use Algebraic multigrid solver by 'AMG'. Note that AMG needs   Ilupack. If Ilupack is not availiable, try 'LINEARGAUSS' or 'LINEAR' solver.</p><pre class="codeinput">    elliptic.solve(<span class="string">'LINEARGAUSS'</span>);
+</pre><pre class="codeoutput">User defined solver: LINEARGAUSS
+Re-order matrix  using reverse Cuthill-McKee 
+reordering ... done.
+Solve using mldivide ... done.
+Spend 0.001276 seconds for solving pde problem.
+</pre><p>Create (if there is no figure 1) and clear the figure.</p><pre class="codeinput">    figure(1)
+</pre><p>Plot the result. Since the mesh is rather fine, we use "LineStyle" = 'none' to supress printing the black edges of the triangles.</p><pre class="codeinput">    elliptic.plot(<span class="string">'LineStyle'</span>,<span class="string">'-'</span>);
+    colormap <span class="string">cool</span>
+
+
+    <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+    <span class="comment">% Use Lagrange Multiplier to involve Dirichlet BCs</span>
+
+    elliptic = EllipticLagrange();
+
+    <span class="comment">%</span>
+</pre><img vspace="5" hspace="5" src="run_elliptic2D_03.png" alt=""> <p>Define an L-shaped domain.</p><pre class="codeinput">    elliptic.grid = Lshape(0.1251);
+</pre><p>For linear elements on 2D domain use Lagrange12D</p><pre class="codeinput">    elliptic.fem = Lagrange12D();
+</pre><p>Note when using linear elements, don't call extendMesh. Otherwise, an exeption will be thrown.</p><pre class="codeinput">    <span class="comment">%Refine the mesh two times uniformly</span>
+<span class="comment">%     elliptic.grid.refineUniformly(2);</span>
+</pre><p>The L-Shaped object created by Lshape class has six boundary segments. You can check how many boundary segments a geometry has by calling elliptic.grid.nBoundarySegments. The method elliptic.grid.identifyBoundarySegment provides a figure where the boundary segments can be identified by color  and number.</p><p>Since we want to have the same boundary condition on all six segments, we can use the simple call</p><pre class="codeinput">    elliptic.setBoundaryConditions(<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'1'</span>,<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'y'</span>,<span class="keyword">...</span>
+        <span class="string">'Neumann'</span>,<span class="string">'0'</span>,<span class="keyword">...</span>
+        <span class="string">'Neumann'</span>,<span class="string">'0'</span>,<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'x'</span>,<span class="keyword">...</span>
+        <span class="string">'Dirichlet'</span>,<span class="string">'1'</span><span class="keyword">...</span>
+        );
+</pre><p>Call initialize. Parameters are diffusity c = 0.1, a = 1 and source f = 10.</p><pre class="codeinput">    elliptic.initialize(1,0,10);
+</pre><pre class="codeoutput">
+Warning: Two or more Dirichlet boundary segments have common points.
+In this case, the boundary value function may be not continuous.
+The value tha appears first in the arguments 
+will be taken, the second apperaring will be ignored.
+
+</pre><p>Solve linear proeblem. Use Algebraic multigrid solver by 'AMG'. Note that AMG needs   Ilupack. If Ilupack is not availiable, try 'LINEARGAUSS' or 'LINEAR' solver.</p><pre class="codeinput">    elliptic.solve(<span class="string">'AMG'</span>);
+</pre><pre class="codeoutput">User defined solver: AMG
+Spend 0.065828 seconds for solving pde
+</pre><p>Create (if there is no figure 1) and clear the figure.</p><pre class="codeinput">    figure(1)
+</pre><p>Plot the result. Since the mesh is rather fine, we use "LineStyle" = 'none' to supress printing the black edges of the triangles.</p><pre class="codeinput">    elliptic.plot(<span class="string">'LineStyle'</span>,<span class="string">'-'</span>);
+    colormap <span class="string">cool</span>
+
+
+
+    <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+</pre><img vspace="5" hspace="5" src="run_elliptic2D_04.png" alt=""> <h2 id="34">Use as Utility</h2><p>use lowlevel methods to compute the matrices for the linear system and solve it explicitely by using bachslash.</p><pre>Don't use a pde object</pre><p>start wth the domain, here a Racktangle with recktangular elements.</p><pre class="codeinput">    grid = RectangleR(0, 2*pi,0, pi);
+
+    grid.refineMesh;
+
+    grid.makeBoundaryMatrix(<span class="keyword">...</span>
+        grid.dirichletBC,<span class="keyword">...</span>
+        grid.dirichletBC,<span class="keyword">...</span>
+        grid.robinBC,<span class="keyword">...</span>
+        grid.robinBC);
+</pre><p>Choose Bilinear elements</p><pre class="codeinput">    fem = Bilinear2D;
+
+    [K,M,F] = fem.assema(grid,10,1,0);
+
+
+    bp1 = grid.getBoundaryPointsIndexPerSegment(1);
+    bp2 = grid.getBoundaryPointsIndexPerSegment(2);
+
+    r = [sin(grid.x(bp1)),2*sin(-2*grid.y(bp2))] ;
+
+
+    [H,R] = fem.assembDataDirichlet(grid,1,r);
+    [Q,G] = fem.assembDataRobin(grid,1,0);
+
+
+    y = (K+M+1e3*(H'*H)+Q)\(F+1e3*(H'*R)+G);
+
+    figure(1)
+    clf
+    grid.plot(y)
+</pre><pre class="codeoutput">
+Warning: Two or more Dirichlet boundary segments have common points.
+In this case, the boundary value function may be not continuous.
+The value tha appears first in the arguments 
+will be taken, the second apperaring will be ignored.
+
+</pre><img vspace="5" hspace="5" src="run_elliptic2D_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% A boundary value problem in $R^2$
+%
+%% First Example
+%
+% Define the pde. For an elliptic PDE 
+%    
+%
+% 
+% $$\nabla \cdot (c(x) \nabla u) + a u = f$$
+% 
+    
+clc
+    %%
+    % We use Elliptic class.
+    
+    elliptic = Elliptic()
+    
+     
+   
+    %%
+    % Define an unit circle
+    elliptic.grid = UnitCircle(0.125)
+    
+    
+    %%
+    % For linear elements on 2D domain use Lagrange12D   
+    
+    elliptic.fem = Lagrange12D()
+    
+    %%
+    % Note when using linear elements, don't call extendMesh. Otherwise, an
+    % exeption will be thrown.
+    
+    %%
+    %Refine the mesh two times uniformly
+    elliptic.grid.refineUniformly(2)    
+    
+    %%
+    % Define Dirichlet boundary conditions
+
+    elliptic.setBoundaryConditions(... 
+        'Dirichlet','sin(s*4).*sin(7*s).*sin(s)');
+    %%
+    % Call initialize. Parameters are diffusity c = 1, a = 0 and source
+    % f = 0. 
+    elliptic.initialize(1,0,0);
+    
+    %%
+    % Solve linear proeblem. Use Algebraic multigrid solver by 'AMG'. 
+    % Note that AMG needs   Ilupack. If Ilupack is not availiable, 
+    % try 'LINEARGAUSS' or 'LINEAR' solver.
+    elliptic.solve('LINEARGAUSS');  
+    
+    %%
+    % Create (if there is no figure 1) and clear the figure.
+    
+    figure(1)   
+    clf
+    %%
+    % Plot the result. Since the mesh is rather fine, we use "LineStyle" =
+    % 'none' to supress printing the black edges of the triangles.
+    
+    elliptic.plot('LineStyle','-');
+    colormap cool
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   
+
+%%
+%% Second example.
+% PDE on unit square with P2 elements and mixed Boundary
+% conditions
+
+  
+  
+    
+    
+    %% 
+    % This class uses stiff-spring technique to involve Dirichlet boundary
+    % conditions. For an example using Lagrange multiplier technique 
+    % use 
+    %
+          elliptic = EllipticLagrange();
+    
+    %
+    %%
+    % Define an L-shaped domain.
+    elliptic.grid = UnitSquare(0.125);
+    
+    %%
+    % For using  P2 elements you must first extend the mesh
+        elliptic.grid.extendMesh;
+    % Use now P2 elements
+    %
+          elliptic.fem = Lagrange22D();
+    
+      
+    
+    %%
+    % The L-Shaped object created by Lshape class has six boundary
+    % segments. You can check how many boundary segments a geometry has
+    % by calling elliptic.grid.nBoundarySegments.
+    % The method elliptic.grid.identifyBoundarySegment provides a figure
+    % where the boundary segments can be identified by color  and number. 
+     
+    %%
+    % Three Dirichlet, one Neuman BC.
+    
+    elliptic.setBoundaryConditions(... 
+        'Dirichlet','sin(pi*s).^3',...           
+        'Dirichlet','y',...
+        'Dirichlet','x',...        
+        'Neumann','0');
+
+     
+    %%
+    % Call initialize. Parameters are diffusity c = 0.1, a = 0 and source
+    % f = 10. 
+    elliptic.initialize(1,0,10);
+    
+    %%
+    % Solve linear proeblem. Use Algebraic multigrid solver by 'AMG'. 
+    % Note that AMG needs   Ilupack. If Ilupack is not availiable, 
+    % try 'LINEARGAUSS' or 'LINEAR' solver.
+    elliptic.solve('LINEARGAUSS');  
+    
+    %%
+    % Create (if there is no figure 1) and clear the figure.
+    
+    figure(1)    
+    %%
+    % Plot the result. Since the mesh is rather fine, we use "LineStyle" =
+    % 'none' to supress printing the black edges of the triangles.
+    
+    elliptic.plot('LineStyle','-');
+    colormap cool
+    
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % Use Lagrange Multiplier to involve Dirichlet BCs
+    
+    elliptic = EllipticLagrange();
+    
+    %
+    %%
+    % Define an L-shaped domain.
+    elliptic.grid = Lshape(0.1251);
+    
+    %%
+     
+    
+    %%
+    % For linear elements on 2D domain use Lagrange12D   
+    
+    elliptic.fem = Lagrange12D();
+    
+    %%
+    % Note when using linear elements, don't call extendMesh. Otherwise, an
+    % exeption will be thrown.
+    
+    %%
+    %Refine the mesh two times uniformly
+%     elliptic.grid.refineUniformly(2);    
+    
+    %%
+    % The L-Shaped object created by Lshape class has six boundary
+    % segments. You can check how many boundary segments a geometry has
+    % by calling elliptic.grid.nBoundarySegments.
+    % The method elliptic.grid.identifyBoundarySegment provides a figure
+    % where the boundary segments can be identified by color  and number. 
+     
+    %%
+    % Since we want to have the same boundary condition on all six
+    % segments, we can use the simple call
+    elliptic.setBoundaryConditions(... 
+        'Dirichlet','1',...           
+        'Dirichlet','y',...
+        'Neumann','0',...
+        'Neumann','0',...
+        'Dirichlet','x',...        
+        'Dirichlet','1'...     
+        );
+
+    
+    %%
+    % Call initialize. Parameters are diffusity c = 0.1, a = 1 and source
+    % f = 10. 
+    elliptic.initialize(1,0,10);
+    
+    %%
+    % Solve linear proeblem. Use Algebraic multigrid solver by 'AMG'. 
+    % Note that AMG needs   Ilupack. If Ilupack is not availiable, 
+    % try 'LINEARGAUSS' or 'LINEAR' solver.
+    elliptic.solve('AMG');  
+    
+    %%
+    % Create (if there is no figure 1) and clear the figure.
+    
+    figure(1)    
+    %%
+    % Plot the result. Since the mesh is rather fine, we use "LineStyle" =
+    % 'none' to supress printing the black edges of the triangles.
+    
+    elliptic.plot('LineStyle','-');
+    colormap cool
+
+    
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Use as Utility
+    %
+    % use lowlevel methods to compute the matrices for the linear system
+    % and solve it explicitely by using bachslash.
+    
+    %%
+    %  Don't use a pde object
+    
+    %%
+    % start wth the domain, here a Racktangle with recktangular elements. 
+    grid = RectangleR(0, 2*pi,0, pi);
+
+    grid.refineMesh;
+
+    grid.makeBoundaryMatrix(...
+        grid.dirichletBC,...   
+        grid.dirichletBC,...
+        grid.robinBC,...
+        grid.robinBC);
+    
+    %%
+    % Choose Bilinear elements
+
+    fem = Bilinear2D;
+
+    [K,M,F] = fem.assema(grid,10,1,0);
+
+
+    bp1 = grid.getBoundaryPointsIndexPerSegment(1);
+    bp2 = grid.getBoundaryPointsIndexPerSegment(2);
+
+    r = [sin(grid.x(bp1)),2*sin(-2*grid.y(bp2))] ;
+
+
+    [H,R] = fem.assembDataDirichlet(grid,1,r);  
+    [Q,G] = fem.assembDataRobin(grid,1,0);
+
+
+    y = (K+M+1e3*(H'*H)+Q)\(F+1e3*(H'*R)+G);
+
+    figure(1)
+    clf
+    grid.plot(y) 
+ 
+##### SOURCE END #####
+--></body></html>

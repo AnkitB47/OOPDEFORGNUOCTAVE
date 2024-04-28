@@ -1,0 +1,14 @@
+LShape vs Lshape 
+
+Lshape is a class that defines an L-shaped 
+geometry. It has 6 boundary segments.
+
+The class LShape is derived from Lshape, 
+but redefines the boundary segment numbers. 
+It has only two boundary segments.
+
+Note that LShape needs the hmax argument.
+An empty constructor call is not possible.
+This is a Matlab issue.
+
+
