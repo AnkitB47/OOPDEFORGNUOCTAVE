@@ -1,4 +1,5 @@
 function [coordinates, elements] = adaptiveMeshRef(N0, coordinates, elements, dirichlet, neumann, uD, boundaries, f, g)
+    % Copyright (C) 2024 Ankit Bhardwaj
     % Parameters
     theta = 0.5; % Dörfler criterion parameter
     max_elements = 10000; % Maximum number of elements
