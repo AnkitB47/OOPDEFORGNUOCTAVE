@@ -14,18 +14,11 @@ Run files are provided in both folders of myOctave and MATLAB, and both are comp
                                                |
                                       +---------------------+
                                       |                     |
-                                      |   myOctave/         |
+                                      |   myOctave/MATLAB   |
                                       |                     |
                                       +---------------------+
                                                |
-                                               |
-                                      +---------------------+
-                                      |                     |
-                                      |   MATLAB/           |
-                                      |                     |
-                                      +---------------------+
-                                               |
-                                               |
+                                    	       |
                                       +---------------------+
                                       |                     |
                                       |   Modify            |
